@@ -4,23 +4,24 @@
 {% block content%}
 <body>
   <div class="container">
-  <form action="{{url_for('welcome')}}" method = "POST">
+  <form action="/students/edit/{{student.id}}" method = "POST">
+
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" value="{{name}}" placeholder="Name" name="name">
-
-  </div>
-    <div class="form-group">
-    <label for="email">Email</label>
-    <input type="text" class="form-control" id="email"  value="{{email}}" placeholder="Email" name="email">
+    <input type="text" value="{{student.name}}"class="form-control" id="name" placeholder="Name" name="name">
 
   </div>
   <div class="form-group">
   <label for="course">Course</label>
-  <input type="text" class="form-control" id="course" value="{{course}}" placeholder="Course" name="course">
+  <input type="text" value="{{student.course}}" class="form-control" id="course"  placeholder="Course" name="course">
 
 </div>
-  <button type="submit" class="btn btn-primary">Update details</button>
+<div class="form-group">
+<label for="age">Age</label>
+<input type="number" value="{{student.age}}" class="form-control" id="age"  placeholder="Age" name="age">
+<input type="hidden" value="{{student.id}}"class="form-control" id="id"  name="id">
+</div>
+  <button type="submit" class="btn btn-primary">Edit Record</button>
 </form>
 </div>
 {% endblock %}
