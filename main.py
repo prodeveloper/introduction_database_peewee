@@ -1,13 +1,28 @@
 from flask import (Flask, render_template, request, make_response)
 import json
 import models
+from models import Student
 
 app = Flask('app')
 
 
 @app.route('/')
 def index():
+    models.initialize()
     return render_template("index.html",)
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    data = dict(request.form.items())
+    if data.get('username', None):
+        models.Student.create(
+            username=data.get('username', 'anonymous'),
+            name=data.get('name', 'Jane Doe'),
+            course=data.get('course', 'Python'),
+            age=data.get('age', 18)
+        )
+    return render_template("register_student.html")
 
 
 @app.route('/students')
@@ -16,6 +31,12 @@ def students():
     students = models.Student.select()
     return render_template("students.html", students=students)
 
+
+@app.route('/students/edit/<id>')
+def edit_student(id="1"):
+    student = Student.select().where(Student.id==id).first()
+    context = {'student': student}
+    return render_template('edit.html', **context)
 
 @app.route('/welcome', methods=['POST'])
 def welcome():
@@ -34,7 +55,6 @@ def edit():
     context = json.loads(data)
     response = make_response(render_template("edit.html", **context))
     return response
-
 
 
 app.run(debug=True, host='0.0.0.0', port=8080)
