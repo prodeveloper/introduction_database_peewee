@@ -1,4 +1,9 @@
-from flask import (Flask, render_template, request, make_response)
+from flask import (Flask,
+                   render_template,
+                   request,
+                   make_response,
+                   redirect
+                   )
 import json
 import models
 from models import Student
@@ -16,7 +21,7 @@ def index():
 def register():
     data = dict(request.form.items())
     if data.get('username', None):
-        models.Student.create(
+        Student.create(
             username=data.get('username', 'anonymous'),
             name=data.get('name', 'Jane Doe'),
             course=data.get('course', 'Python'),
@@ -32,9 +37,16 @@ def students():
     return render_template("students.html", students=students)
 
 
-@app.route('/students/edit/<id>')
+@app.route('/students/edit/<id>', methods=['POST', 'GET'])
 def edit_student(id="1"):
     student = Student.select().where(Student.id==id).first()
+    data = dict(request.form.items())
+    if data.get('id', None):
+        student.name = data.get('name', student.name)
+        student.course = data.get('course', student.course)
+        student.age = data.get('age', student.age)
+        student.save()
+        return redirect('/students')
     context = {'student': student}
     return render_template('edit.html', **context)
 
