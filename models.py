@@ -1,9 +1,16 @@
-from peewee import *
+from peewee import (CharField,
+                    SqliteDatabase,
+                    Model,
+                    TextField,
+                    IntegerField,
+                    OperationalError,
+                    IntegrityError)
 db = SqliteDatabase("students.db")
 students = [
     {'id': 1, 'username': 'joycedev', 'name': 'Joyce', 'course': 'python', 'age': 18},
     {'id': 2, 'username': 'fatma15', 'name': 'Fatma', 'course': 'jave', 'age': 19}
 ]
+
 
 class Student(Model):
     username = CharField(max_length=255, unique=True)
@@ -13,6 +20,7 @@ class Student(Model):
 
     class Meta:
         database = db
+
 
 def initialize():
     try:
